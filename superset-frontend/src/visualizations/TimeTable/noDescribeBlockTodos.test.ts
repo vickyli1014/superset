@@ -35,11 +35,11 @@ function findTestFiles(dir: string): string[] {
 test('TimeTable test files have no describe-block TODO suppressions', () => {
   const timeTableDir = path.resolve(__dirname);
   const testFiles = findTestFiles(timeTableDir);
-  const TODO_PATTERN = 'TODO: Migrate from describe blocks';
+  const TODO_PATTERN = ['TODO', 'Migrate from describe blocks'].join(': ');
 
-  const filesWithTodo = testFiles.filter(f =>
-    fs.readFileSync(f, 'utf-8').includes(TODO_PATTERN),
-  );
+  const filesWithTodo = testFiles
+    .filter(f => !f.endsWith('noDescribeBlockTodos.test.ts'))
+    .filter(f => fs.readFileSync(f, 'utf-8').includes(TODO_PATTERN));
 
   expect(filesWithTodo).toEqual([]);
 });
